@@ -95,7 +95,7 @@ const Board = () => {
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="max-w-4xl px-4 py-8 mx-auto">
-                <button onClick={() => navigate('/')} className="flex items-center mb-6 text-gray-600 hover:text-gray-900">
+                <button onClick={() => navigate('/dashboard')} className="flex items-center mb-6 text-gray-600 hover:text-gray-900">
                     <ArrowLeft className="w-4 h-4 mr-2" /> Back to Dashboard
                 </button>
 

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://react-to-do-app-cvuf.onrender.com/api',
+    baseURL: import.meta.env.MODE === 'production' ? 'https://react-to-do-app-cvuf.onrender.com/api' : 'http://localhost:5000/api',
     headers: {
         'Content-Type': 'application/json',
     },
