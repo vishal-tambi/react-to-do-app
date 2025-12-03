@@ -14,6 +14,12 @@ A production-grade, full-stack To-Do application built with the MERN stack (Mong
 - **Frontend**: React.js, TailwindCSS, Vite, Axios, React Router DOM, Lucide React.
 - **Backend**: Node.js, Express.js, MongoDB (Mongoose), JWT, BcryptJS.
 
+<img width="1902" height="908" alt="Screenshot 2025-12-03 191225" src="https://github.com/user-attachments/assets/98cfb5a1-9b5b-4831-ae83-34eb066095d4" />
+
+<img width="1898" height="911" alt="Screenshot 2025-12-03 191216" src="https://github.com/user-attachments/assets/53d01d48-008d-4b70-95ce-6116624c821f" />
+
+<img width="1914" height="920" alt="Screenshot 2025-12-03 191236" src="https://github.com/user-attachments/assets/865e0038-821b-40c0-8c2b-af5bfd5f64a5" />
+
 ## Getting Started
 
 ### Prerequisites
