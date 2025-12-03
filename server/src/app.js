@@ -7,9 +7,15 @@ require('dotenv').config();
 
 const app = express();
 
+// Configure CORS
+const corsOptions = {
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000', // Allow only your frontend origin
+    optionsSuccessStatus: 200
+};
+
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use(morgan('dev'));
 
