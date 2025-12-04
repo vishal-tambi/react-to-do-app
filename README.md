@@ -4,142 +4,116 @@
 
 ![TaskFlow Banner](https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=2072&ixlib=rb-4.0.3)
 
-## ✨ Key Features
+## ✨ Detailed Features
 
 ### 🎯 Productivity & Organization
-- **Smart Dashboard**: Get a bird's-eye view of your projects with a clean, clutter-free interface.
-- **Kanban-style Boards**: Create dedicated boards for different projects or categories to keep tasks organized.
-- **Task Scheduling**: Set specific **due dates and times** for your tasks. Never miss a deadline again.
-- **Interactive Calendar**: Visualize your schedule with a global **Calendar View** that aggregates tasks from all your boards.
-- **Focus Timer**: Built-in **Pomodoro & Stopwatch** widget to help you stay focused during work sessions.
+*   **Smart Dashboard**: The central hub of your workflow. It provides a quick summary of your boards and quick access to essential tools.
+*   **Kanban-style Boards**: Create unlimited boards to categorize your work (e.g., "Work", "Personal", "Shopping"). Inside each board, manage tasks with ease.
+*   **Task Scheduling**:
+    *   **Due Dates & Times**: Assign specific deadlines to tasks.
+    *   **Visual Indicators**: Tasks display their due dates, and overdue items are highlighted in red to grab your attention immediately.
+*   **Global Calendar View**: A dedicated Calendar page that aggregates **all** your tasks from **all** boards into a single monthly view. See your entire schedule at a glance.
+*   **Focus Timer Widget**: A built-in productivity tool right on the dashboard.
+    *   **Stopwatch**: Track how long you spend on a task.
+    *   **Pomodoro Timer**: Set preset intervals (e.g., 25m) to work in focused bursts.
 
-### 🎨 User Experience
-- **Modern UI**: A polished interface featuring glassmorphism, smooth gradients, and a carefully curated color palette.
-- **Smooth Animations**: Powered by **Framer Motion** for delightful interactions and page transitions.
-- **Butter-Smooth Scrolling**: Integrated **Lenis** for a premium scrolling experience.
-- **Responsive Design**: Fully optimized for desktops, tablets, and mobile devices.
+### 🎨 User Experience (UX)
+*   **Modern Aesthetic**: A clean, white-space-dominant design with soft shadows and rounded corners, inspired by modern SaaS applications.
+*   **Interactive Elements**:
+    *   **Hover Effects**: Buttons and cards react to your cursor.
+    *   **Micro-animations**: Tasks slide in when added, and fade out when deleted, powered by `framer-motion`.
+*   **Smooth Scrolling**: Integrated `Lenis` library ensures that scrolling feels weighty and premium, unlike standard browser scrolling.
+*   **Responsive Design**: The sidebar collapses or adapts on smaller screens, ensuring you can manage tasks from your phone or tablet.
 
-### 🔒 Security
-- **Secure Authentication**: Robust user registration and login system using **JWT (JSON Web Tokens)**.
-- **Data Protection**: Passwords are hashed and salted using **Bcrypt**.
+### 🔒 Security & Performance
+*   **JWT Authentication**: Stateless authentication keeps your session secure without server-side storage.
+*   **Password Encryption**: User passwords are never stored in plain text; they are hashed using `bcryptjs`.
+*   **Protected Routes**: Middleware ensures that unauthorized users cannot access private data.
+
+---
+
+## 📡 API Reference
+
+The backend exposes a RESTful API. All endpoints (except auth) require a valid Bearer Token in the `Authorization` header.
+
+### 🔐 Authentication
+| Method | Endpoint | Description | Body Parameters |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/auth/register` | Register a new user | `name`, `email`, `password` |
+| `POST` | `/api/auth/login` | Login user & get token | `email`, `password` |
+| `GET` | `/api/auth/me` | Get current user profile | _None_ |
+
+### 📋 Boards
+| Method | Endpoint | Description | Body Parameters |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/boards` | Get all boards for user | _None_ |
+| `POST` | `/api/boards` | Create a new board | `title` |
+| `PUT` | `/api/boards/:id` | Update a board | `title` |
+| `DELETE` | `/api/boards/:id` | Delete a board | _None_ |
+
+### ✅ Todos (Tasks)
+| Method | Endpoint | Description | Body Parameters |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/todos/user` | **Get ALL user tasks** (for Calendar) | _None_ |
+| `GET` | `/api/todos/board/:boardId` | Get tasks for a specific board | _None_ |
+| `POST` | `/api/todos` | Create a new task | `boardId`, `title`, `dueDate` (optional) |
+| `PUT` | `/api/todos/:id` | Update task (status, title, etc.) | `status`, `title`, `description` |
+| `DELETE` | `/api/todos/:id` | Delete a task | _None_ |
 
 ---
 
 ## 🛠️ Tech Stack
 
-This project utilizes a modern MERN stack architecture with additional libraries for enhanced UI/UX.
-
 ### **Frontend (Client)**
-- **Framework**: [React.js](https://react.dev/) (v18) with [Vite](https://vitejs.dev/) for lightning-fast tooling.
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) for utility-first, responsive design.
-- **Animations**: [Framer Motion](https://www.framer.com/motion/) for complex animations and gestures.
-- **Icons**: [Lucide React](https://lucide.dev/) for clean and consistent iconography.
-- **Routing**: [React Router DOM](https://reactrouter.com/) for client-side routing.
-- **HTTP Client**: [Axios](https://axios-http.com/) for API requests.
-- **Scrolling**: [Lenis](https://lenis.studio/) for smooth scroll normalization.
+*   **React.js (v18)**: Component-based UI library.
+*   **Vite**: Next-generation frontend tooling.
+*   **Tailwind CSS**: Utility-first CSS framework for rapid UI development.
+*   **Framer Motion**: Production-ready motion library for React.
+*   **Lucide React**: Beautiful & consistent icon set.
+*   **Axios**: Promise-based HTTP client.
+*   **Lenis**: Smooth scrolling library.
 
 ### **Backend (Server)**
-- **Runtime**: [Node.js](https://nodejs.org/)
-- **Framework**: [Express.js](https://expressjs.com/) for robust API routing.
-- **Database**: [MongoDB](https://www.mongodb.com/) with [Mongoose](https://mongoosejs.com/) ODM.
-- **Authentication**: `jsonwebtoken` for auth and `bcryptjs` for password hashing.
-- **Security**: `helmet` for HTTP headers and `cors` for Cross-Origin Resource Sharing.
-- **Logging**: `morgan` for HTTP request logging.
+*   **Node.js & Express**: Fast, unopinionated web framework.
+*   **MongoDB & Mongoose**: NoSQL database and object modeling.
+*   **JWT (JSON Web Tokens)**: Securely transmitting information between parties.
+*   **Bcryptjs**: Library to help you hash passwords.
+*   **Cors**: Middleware to enable Cross-Origin Resource Sharing.
 
 ---
 
 ## 🚀 Getting Started
 
-Follow these steps to set up the project locally on your machine.
-
 ### Prerequisites
-- **Node.js** (v16 or higher)
-- **npm** or **yarn**
-- **MongoDB** (Local instance or Atlas connection string)
+*   Node.js (v16+)
+*   MongoDB (Local or Atlas)
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/yourusername/taskflow.git
-cd taskflow
-```
+### Installation
 
-### 2. Backend Setup
-Navigate to the server directory and install dependencies:
-```bash
-cd server
-npm install
-```
+1.  **Clone the repo**
+    ```bash
+    git clone https://github.com/yourusername/taskflow.git
+    ```
 
-Create a `.env` file in the `server` directory with the following variables:
-```env
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_super_secret_jwt_key
-FRONTEND_URL=http://localhost:5173
-```
+2.  **Setup Backend**
+    ```bash
+    cd server
+    npm install
+    # Create .env file with: PORT, MONGO_URI, JWT_SECRET, FRONTEND_URL
+    npm run dev
+    ```
 
-Start the backend server:
-```bash
-npm run dev
-```
+3.  **Setup Frontend**
+    ```bash
+    cd client
+    npm install
+    npm run dev
+    ```
 
-### 3. Frontend Setup
-Open a new terminal, navigate to the client directory, and install dependencies:
-```bash
-cd client
-npm install
-```
-
-Start the development server:
-```bash
-npm run dev
-```
-
-### 4. Access the App
-Open your browser and visit:
-```
-http://localhost:5173
-```
-
----
-
-## 📂 Project Structure
-
-```
-taskflow/
-├── client/                 # Frontend React Application
-│   ├── src/
-│   │   ├── components/     # Reusable UI components (TimerWidget, etc.)
-│   │   ├── context/        # React Context (AuthContext)
-│   │   ├── pages/          # Application Pages (Dashboard, Board, Calendar)
-│   │   ├── services/       # API service configuration
-│   │   └── ...
-│   └── ...
-├── server/                 # Backend Node.js/Express Application
-│   ├── src/
-│   │   ├── controllers/    # Request handlers
-│   │   ├── middleware/     # Auth and error handling middleware
-│   │   ├── models/         # Mongoose database models
-│   │   ├── routes/         # API route definitions
-│   │   └── app.js          # App entry point
-│   └── ...
-└── README.md               # Project Documentation
-```
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+4.  **Enjoy!** Visit `http://localhost:5173`
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
