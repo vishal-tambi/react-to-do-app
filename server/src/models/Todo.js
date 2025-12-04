@@ -18,6 +18,9 @@ const todoSchema = new mongoose.Schema({
         enum: ['pending', 'in-progress', 'completed'],
         default: 'pending',
     },
+    dueDate: {
+        type: Date,
+    },
     createdAt: {
         type: Date,
         default: Date.now,

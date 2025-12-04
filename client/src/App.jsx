@@ -5,8 +5,11 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Board from './pages/Board';
 import Landing from './pages/Landing';
+import Calendar from './pages/Calendar';
 import { useContext } from 'react';
 import AuthContext from './context/AuthContext';
+import Lenis from 'lenis';
+import { useEffect } from 'react';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
@@ -17,6 +20,21 @@ const PrivateRoute = ({ children }) => {
 };
 
 function App() {
+  useEffect(() => {
+    const lenis = new Lenis();
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
+
   return (
     <AuthProvider>
       <Router>
@@ -29,6 +47,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Dashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/calendar"
+            element={
+              <PrivateRoute>
+                <Calendar />
               </PrivateRoute>
             }
           />

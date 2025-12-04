@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
-import { Trash2, Plus, ArrowLeft, CheckCircle, Circle, Clock } from 'lucide-react';
+import { Trash2, Plus, ArrowLeft, CheckCircle, Circle, Clock, Calendar } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Board = () => {
     const { id } = useParams();
@@ -9,20 +10,12 @@ const Board = () => {
     const [board, setBoard] = useState(null);
     const [todos, setTodos] = useState([]);
     const [newTodoTitle, setNewTodoTitle] = useState('');
+    const [newTodoDate, setNewTodoDate] = useState('');
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchBoardAndTodos = async () => {
             try {
-                // Fetch board details (we might need a specific endpoint or just use the list if we store it in context, but fetching is safer)
-                // Actually our API doesn't have getBoardById, only getBoards (all).
-                // We should add getBoardById to backend or filter from getBoards.
-                // Let's filter from getBoards for now or add endpoint.
-                // Adding endpoint is better.
-                // But for speed, let's try to fetch all and find.
-                // Wait, updateBoard and deleteBoard use ID, so we can probably add getBoardById easily.
-                // But let's stick to what we have.
-                // I'll fetch all boards and find the one.
                 const boardsRes = await api.get('/boards');
                 const currentBoard = boardsRes.data.find(b => b._id === id);
                 if (currentBoard) {
@@ -31,7 +24,6 @@ const Board = () => {
                     navigate('/'); // Board not found
                 }
 
-                // Fetch todos
                 const todosRes = await api.get(`/todos/board/${id}`);
                 setTodos(todosRes.data);
             } catch (error) {
@@ -46,14 +38,18 @@ const Board = () => {
     const addTodo = async (e) => {
         e.preventDefault();
         if (!newTodoTitle.trim()) return;
+        console.log('Sending todo:', { boardId: id, title: newTodoTitle, dueDate: newTodoDate });
         try {
             const { data } = await api.post('/todos', {
                 boardId: id,
                 title: newTodoTitle,
-                status: 'pending'
+                status: 'pending',
+                dueDate: newTodoDate || null
             });
+            console.log('Received todo:', data);
             setTodos([...todos, data]);
             setNewTodoTitle('');
+            setNewTodoDate('');
         } catch (error) {
             console.error(error);
         }
@@ -89,57 +85,132 @@ const Board = () => {
         }
     };
 
-    if (loading) return <div className="p-8 text-center">Loading...</div>;
-    if (!board) return <div className="p-8 text-center">Board not found</div>;
+    const isOverdue = (date) => {
+        if (!date) return false;
+        return new Date(date) < new Date() && new Date(date).toDateString() !== new Date().toDateString();
+    };
+
+    const formatDueDate = (date) => {
+        if (!date) return null;
+        return new Date(date).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    };
+
+    if (loading) return <div className="min-h-screen flex items-center justify-center bg-gray-50 text-gray-500">Loading...</div>;
+    if (!board) return <div className="min-h-screen flex items-center justify-center bg-gray-50 text-gray-500">Board not found</div>;
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <div className="max-w-4xl px-4 py-8 mx-auto">
-                <button onClick={() => navigate('/dashboard')} className="flex items-center mb-6 text-gray-600 hover:text-gray-900">
+        <div className="min-h-screen bg-gray-50 p-8">
+            <div className="max-w-4xl mx-auto">
+                <button
+                    onClick={() => navigate('/dashboard')}
+                    className="flex items-center mb-8 text-gray-500 hover:text-gray-900 transition-colors px-4 py-2 rounded-lg hover:bg-white"
+                >
                     <ArrowLeft className="w-4 h-4 mr-2" /> Back to Dashboard
                 </button>
 
                 <div className="flex items-center justify-between mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">{board.title}</h1>
-                    <button onClick={deleteBoard} className="p-2 text-red-600 rounded-full hover:bg-red-50">
+                    <div>
+                        <h1 className="text-4xl font-bold text-gray-900 mb-2">{board.title}</h1>
+                        <p className="text-gray-500 flex items-center gap-2">
+                            <Calendar className="w-4 h-4" />
+                            Created on {new Date(board.createdAt).toLocaleDateString()}
+                        </p>
+                    </div>
+                    <button
+                        onClick={deleteBoard}
+                        className="p-3 text-red-600 rounded-xl hover:bg-red-50 transition-colors border border-transparent hover:border-red-100"
+                        title="Delete Board"
+                    >
                         <Trash2 className="w-5 h-5" />
                     </button>
                 </div>
 
-                <div className="p-6 mb-8 bg-white rounded-lg shadow">
-                    <form onSubmit={addTodo} className="flex gap-4">
-                        <input
-                            type="text"
-                            placeholder="Add a new task..."
-                            className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            value={newTodoTitle}
-                            onChange={(e) => setNewTodoTitle(e.target.value)}
-                        />
-                        <button type="submit" className="flex items-center px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">
-                            <Plus className="w-5 h-5 mr-2" /> Add
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-8">
+                    <form onSubmit={addTodo} className="flex flex-col sm:flex-row gap-4">
+                        <div className="flex-1">
+                            <input
+                                type="text"
+                                placeholder="What needs to be done?"
+                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                                value={newTodoTitle}
+                                onChange={(e) => setNewTodoTitle(e.target.value)}
+                            />
+                        </div>
+                        <div className="sm:w-48">
+                            <input
+                                type="datetime-local"
+                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-gray-600"
+                                value={newTodoDate}
+                                onChange={(e) => setNewTodoDate(e.target.value)}
+                            />
+                        </div>
+                        <button type="submit" className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 font-medium shadow-lg shadow-blue-200">
+                            <Plus className="w-5 h-5" />
+                            Add Task
                         </button>
                     </form>
                 </div>
 
-                <div className="space-y-4">
-                    {todos.map((todo) => (
-                        <div key={todo._id} className="flex items-center justify-between p-4 bg-white rounded-lg shadow-sm hover:shadow transition">
-                            <div className="flex items-center gap-4">
-                                <button onClick={() => toggleStatus(todo)} className={`text-gray-400 hover:text-blue-600 ${todo.status === 'completed' ? 'text-green-500' : ''}`}>
-                                    {todo.status === 'completed' ? <CheckCircle className="w-6 h-6" /> : <Circle className="w-6 h-6" />}
+                <div className="space-y-3">
+                    <AnimatePresence>
+                        {todos.map((todo) => (
+                            <motion.div
+                                key={todo._id}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className={`group flex items-center justify-between p-5 bg-white rounded-xl border transition-all hover:shadow-md ${todo.status === 'completed' ? 'border-gray-100 bg-gray-50/50' : 'border-gray-100'
+                                    }`}
+                            >
+                                <div className="flex items-center gap-4 flex-1">
+                                    <button
+                                        onClick={() => toggleStatus(todo)}
+                                        className={`transition-colors ${todo.status === 'completed' ? 'text-green-500' : 'text-gray-300 hover:text-blue-500'
+                                            }`}
+                                    >
+                                        {todo.status === 'completed' ? (
+                                            <CheckCircle className="w-6 h-6" />
+                                        ) : (
+                                            <Circle className="w-6 h-6" />
+                                        )}
+                                    </button>
+
+                                    <div className="flex-1">
+                                        <div className="flex items-center justify-between">
+                                            <p className={`text-lg font-medium transition-all ${todo.status === 'completed' ? 'text-gray-400 line-through' : 'text-gray-900'
+                                                }`}>
+                                                {todo.title}
+                                            </p>
+                                            {todo.dueDate && (
+                                                <div className={`text-xs px-2 py-1 rounded-full flex items-center gap-1 ${isOverdue(todo.dueDate) && todo.status !== 'completed'
+                                                    ? 'bg-red-100 text-red-600'
+                                                    : 'bg-gray-100 text-gray-600'
+                                                    }`}>
+                                                    <Calendar className="w-3 h-3" />
+                                                    {formatDueDate(todo.dueDate)}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button
+                                    onClick={() => deleteTodo(todo._id)}
+                                    className="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all opacity-0 group-hover:opacity-100"
+                                >
+                                    <Trash2 className="w-5 h-5" />
                                 </button>
-                                <span className={`text-lg ${todo.status === 'completed' ? 'text-gray-400 line-through' : 'text-gray-900'}`}>
-                                    {todo.title}
-                                </span>
-                            </div>
-                            <button onClick={() => deleteTodo(todo._id)} className="text-gray-400 hover:text-red-500">
-                                <Trash2 className="w-5 h-5" />
-                            </button>
-                        </div>
-                    ))}
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
+
                     {todos.length === 0 && (
-                        <div className="py-12 text-center text-gray-500">
-                            No tasks yet. Add one above!
+                        <div className="py-16 text-center">
+                            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400">
+                                <CheckCircle className="w-8 h-8" />
+                            </div>
+                            <h3 className="text-lg font-medium text-gray-900">All caught up!</h3>
+                            <p className="text-gray-500 mt-1">No tasks on this board yet.</p>
                         </div>
                     )}
                 </div>
