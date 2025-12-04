@@ -41,7 +41,7 @@ const Login = () => {
 
 
                 <button onClick={() => navigate('/')} className="flex items-center mb-6 text-gray-600 hover:text-gray-900">
-                    <ArrowLeft className="w-4 h-4 mr-2" /> Back to Dashboard
+                    <ArrowLeft className="w-4 h-4 mr-2" /> Back to Home
                 </button>
 
 

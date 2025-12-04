@@ -13,7 +13,7 @@ const getTodos = async (req, res) => {
 // @route   POST /api/todos
 // @access  Private
 const createTodo = async (req, res) => {
-    const { boardId, title, description, status } = req.body;
+    const { boardId, title, description, status, dueDate } = req.body;
 
     if (!boardId || !title) {
         return res.status(400).json({ message: 'Please add boardId and title' });
@@ -34,6 +34,7 @@ const createTodo = async (req, res) => {
         title,
         description,
         status,
+        dueDate,
     });
 
     res.status(201).json(todo);
@@ -85,9 +86,24 @@ const deleteTodo = async (req, res) => {
     res.status(200).json({ id: req.params.id });
 };
 
+// @desc    Get all todos for the logged-in user
+// @route   GET /api/todos/user
+// @access  Private
+const getTodosByUser = async (req, res) => {
+    // Find all boards belonging to the user
+    const boards = await Board.find({ user: req.user.id });
+    const boardIds = boards.map(board => board._id);
+
+    // Find all todos associated with these boards
+    const todos = await Todo.find({ board: { $in: boardIds } }).populate('board', 'title');
+
+    res.status(200).json(todos);
+};
+
 module.exports = {
     getTodos,
     createTodo,
     updateTodo,
     deleteTodo,
+    getTodosByUser,
 };
