@@ -34,6 +34,7 @@ const Board = () => {
         };
         fetchBoardAndTodos();
     }, [id, navigate]);
+    console.log(motion);
 
     const addTodo = async (e) => {
         e.preventDefault();
@@ -196,10 +197,11 @@ const Board = () => {
 
                                 <button
                                     onClick={() => deleteTodo(todo._id)}
-                                    className="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all opacity-0 group-hover:opacity-100"
+                                    className="p-2 bg-red-500 text-white rounded-lg transition-all opacity-0 group-hover:opacity-100"
                                 >
                                     <Trash2 className="w-5 h-5" />
                                 </button>
+
                             </motion.div>
                         ))}
                     </AnimatePresence>

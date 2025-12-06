@@ -56,7 +56,7 @@ const TimerWidget = () => {
     };
 
     return (
-        <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/20 w-full max-w-sm">
+        <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/20 w-full sm:max-w-md lg:max-w-sm mx-auto">
             <div className="flex justify-center gap-4 mb-6">
                 <button
                     onClick={() => {

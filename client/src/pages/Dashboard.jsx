@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Plus, Layout, LogOut, Calendar } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import TimerWidget from '../components/TimerWidget';
+import MobileNav from '../components/MobileNav';
 
 const Dashboard = () => {
     const { user, logout } = useContext(AuthContext);
@@ -59,7 +60,7 @@ const Dashboard = () => {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 p-8 overflow-y-auto">
+            <main className="flex-1 p-8 overflow-y-auto pb-24">
                 <header className="flex justify-between items-center mb-10">
                     <div>
                         <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
@@ -67,7 +68,7 @@ const Dashboard = () => {
                     </div>
                     <button
                         onClick={logout}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        className="hidden md:flex items-center justify-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                     >
                         <LogOut className="w-4 h-4" />
                         Logout
@@ -82,7 +83,7 @@ const Dashboard = () => {
                     {/* Boards Section */}
                     <div className="lg:col-span-2 space-y-8">
                         {/* Create Board Input */}
-                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <div className="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-gray-100">
                             <h2 className="text-lg font-semibold text-gray-900 mb-4">Create New Board</h2>
                             <form onSubmit={createBoard} className="flex gap-3">
                                 <input
@@ -113,7 +114,7 @@ const Dashboard = () => {
                                         >
                                             <Link
                                                 to={`/board/${board._id}`}
-                                                className="block p-6 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-200 transition-all group"
+                                                className="block p-4 md:p-6 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-200 transition-all group"
                                             >
                                                 <div className="flex justify-between items-start mb-4">
                                                     <div className="p-3 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors">
@@ -154,6 +155,7 @@ const Dashboard = () => {
                     </div>
                 </div>
             </main>
+            <MobileNav />
         </div>
     );
 };
