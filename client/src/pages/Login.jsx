@@ -38,14 +38,6 @@ const Login = () => {
                 transition={{ duration: 0.5 }}
                 className="bg-white/80 backdrop-blur-xl w-full max-w-md p-8 rounded-3xl shadow-2xl border border-white/20"
             >
-
-
-                <button onClick={() => navigate('/')} className="flex items-center mb-6 text-gray-600 hover:text-gray-900">
-                    <ArrowLeft className="w-4 h-4 mr-2" /> Back to Home
-                </button>
-
-
-
                 <div className="text-center mb-8">
                     <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent inline-block mb-2">
                         TaskMaster
