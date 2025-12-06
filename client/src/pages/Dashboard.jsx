@@ -85,7 +85,7 @@ const Dashboard = () => {
                         {/* Create Board Input */}
                         <div className="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-gray-100">
                             <h2 className="text-lg font-semibold text-gray-900 mb-4">Create New Board</h2>
-                            <form onSubmit={createBoard} className="flex gap-3">
+                            <form onSubmit={createBoard} className="flex flex-col sm:flex-row gap-3">
                                 <input
                                     type="text"
                                     placeholder="Enter board name..."
@@ -93,7 +93,7 @@ const Dashboard = () => {
                                     value={newBoardTitle}
                                     onChange={(e) => setNewBoardTitle(e.target.value)}
                                 />
-                                <button className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors flex items-center gap-2 font-medium shadow-lg shadow-blue-200">
+                                <button className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 font-medium shadow-lg shadow-blue-200">
                                     <Plus className="w-5 h-5" />
                                     Create
                                 </button>
